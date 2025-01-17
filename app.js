@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const WhatsAppController = require('./controllers/WhatsAppController');
 const WhatsAppMessageService = require('./services/WhatsAppMessageService');
+const UtilityService = require('./services/UtilityService');
 const WhatsAppRoutes = require('./routes/WhatsAppRoutes');
 const WebhookRoutes = require('./routes/WebhookRoutes');
 const WebhookController = require('./controllers/WebhookController');
@@ -19,11 +20,12 @@ const port = process.env.PORT || 3000;
 
 // Create instances of services
 const messageService = new WhatsAppMessageService();
+const utilityService = new UtilityService();
 
 // Create an instance of the controller, passing the messageService instance
 const whatsappController = new WhatsAppController(messageService);
 const webhookController = new WebhookController(messageService);
-// const downloadContoller = new DownloadController();
+const downloadContoller = new DownloadController(utilityService);
 
 // Middleware for JSON and URL encoded data
 app.use(bodyParser.json());
@@ -35,7 +37,7 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 // Set up routes, passing the controller methods
 app.use('/candidate/api/whatsapp', WhatsAppRoutes(whatsappController));
 app.use('/candidate/api/webhook', WebhookRoutes(webhookController));
-app.use('/candidate/api/download', DownloadRoutes(DownloadController));
+app.use('/candidate/api/download', DownloadRoutes(downloadContoller));
 
 
 // Start the server

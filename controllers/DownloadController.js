@@ -1,6 +1,10 @@
 const path = require('path');
-
 class DownloadController {
+
+    // Constructor that accepts the service instance
+    constructor(utilityService) {
+      this.utilityService = utilityService;
+    }
 
   // Handle file download
 //   handleFileDownload(req, res) {
@@ -24,14 +28,25 @@ class DownloadController {
 
   // Handle file download with token validation
   handleFileDownload(req, res) {
-    const fileName = req.params.fileName; // File name from URL
-    const filePath = path.join(__dirname, '../public/files', fileName); // File location
-    const token = req.query.token; // Security token passed as query param
+    // const fileName = req.params.fileName; // File name from URL
+    // const filePath = path.join(__dirname, '../public/files', fileName); // File location
+    // const token = req.query.token; // Security token passed as query param
+
+    // // Validate the token
+    // const validToken = 'secure-token-123'; // Replace with your own token logic
+    // if (!token || token !== validToken) {
+    //   return res.status(403).json({ error: 'Unauthorized access. Invalid or missing token.' });
+    // }
+
+
+    const { fileName } = req.params;
+    const { token, expires } = req.query;
+    const filePath = path.join(__dirname, '../public/files', fileName);
+
 
     // Validate the token
-    const validToken = 'secure-token-123'; // Replace with your own token logic
-    if (!token || token !== validToken) {
-      return res.status(403).json({ error: 'Unauthorized access. Invalid or missing token.' });
+    if (!this.utilityService.validateSignedUrl(fileName, token, expires)) {
+      return res.status(403).send('Invalid or expired token');
     }
 
     // Set headers explicitly
@@ -48,4 +63,4 @@ class DownloadController {
   }
 }
 
-module.exports = new DownloadController();
+module.exports = DownloadController;

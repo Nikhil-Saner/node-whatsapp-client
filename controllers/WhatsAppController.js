@@ -69,7 +69,7 @@ class WhatsAppController {
     }
 
     // Send admit card template
-    async sendAdmitCardMessage(req, res) {
+    async sendAdmitCardTemplateMessage(req, res) {
       const { to } = req.body;  // Accessing the recipient's number from request body
       console.log("Send Admit Card Message API called...");
       try {
