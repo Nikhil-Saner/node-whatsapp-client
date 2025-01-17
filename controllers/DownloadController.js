@@ -13,15 +13,17 @@ class DownloadController {
 //   }
 
 
-     // Handle file download
+  // Handle file download
   handleFileDownload(req, res) {
-    const filePath = path.join(__dirname, '../public/files/dummy.pdf'); // Adjust the path to your file location
+    // Extract file name from the URL parameter
+    const fileName = req.params.fileName; // E.g., dummy.pdf
+    const filePath = path.join(__dirname, '../public/files', fileName); // Adjust the folder as needed
 
-    // Set headers explicitly to meet WhatsApp requirements
-    res.setHeader('Content-Type', 'application/pdf'); // Ensure correct MIME type
-    res.setHeader('Content-Disposition', 'inline'); // Serve the file directly without forcing download
+    // Set headers explicitly
+    res.setHeader('Content-Type', 'application/pdf'); // Adjust MIME type dynamically if needed
+    res.setHeader('Content-Disposition', 'inline'); // Serve the file directly
 
-    // Send the file as-is
+    // Send the file
     res.sendFile(filePath, (err) => {
       if (err) {
         console.error('Error sending file:', err);
