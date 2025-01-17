@@ -96,6 +96,52 @@ class WhatsAppMessageService {
   }
 
 
+    // Send a admit card template message
+    sendAdmitCardTemplateMessage(recipient, templateName) {
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.apiToken}`,
+      };
+  
+      const admitCardLink = "https://node-whatsapp-client.onrender.com/candidate/api/download/dummy.pdf?token=secure-token-123";
+      const fileName = "dummy.pdf";
+      // Build the template parameters
+      // const parameters = variables.map(variable => ({
+      //   type: 'text',
+      //   text: variable
+      // }));
+  
+      const body = {
+        messaging_product: 'whatsapp',
+        to: recipient,
+        type: 'template',
+        template: {
+          name: templateName,
+          language: { code: 'en_US' },
+          components: [{
+            type: 'header',
+            parameters: [
+              {
+                type: 'document',
+                document: {
+                  link: admitCardLink,
+                  filename: fileName
+                }
+              }
+            ]
+          }]
+        }
+      };
+  
+
+      return axios.post(this.apiUrl, body, { headers })
+        .then(response => response.data)
+        .catch(error => {
+          console.error("Error details:", JSON.stringify(error.response?.data || error.message, null, 2));
+          throw new Error(`Error sending template message: ${JSON.stringify(error.response?.data || error.message, null, 2)}`);
+        });
+    }
+
 
   async markMessageAsRead(messageId) {
     const headers = {

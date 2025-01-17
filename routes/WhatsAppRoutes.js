@@ -9,7 +9,8 @@ module.exports = function(whatsappController) {
   router.get('/test', (req, res) => whatsappController.test(req, res));
   router.post('/send', (req, res) => whatsappController.sendMessage(req, res));
   router.post('/sendPaymentUpdate', (req, res) => whatsappController.sendPaymentUpdateMessage(req, res));
-  router.post('/sendHelpdeskMessage', (req, res) => whatsappController.sendHelpdeskMessage(req, res));
+  router.post('/sendHelpdeskMessage', (req, res) => whatsappController.sendHelpdeskMessage(req, res));sendAdmitCardMessage
+  router.post('/sendAdmitCardMessage', (req, res) => whatsappController.sendAdmitCardTemplateMessage(req, res));
 
   return router;
 };
