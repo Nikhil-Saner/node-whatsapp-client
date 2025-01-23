@@ -29,12 +29,12 @@ class WhatsAppController {
     // }
 
     // Send a simple message
-    async sendMessage(req, res) {
+    async sendTextMessage(req, res) {
       const { to, message } = req.body; // Accessing the data from request body
       console.log("Send Message API called...");
 
       try {
-        const response = await this.messageService.sendMessage(to, message); // Await the Promise to resolve
+        const response = await this.messageService.sendTextMessage(to, message); // Await the Promise to resolve
         return res.status(200).json({ message: response });
       } catch (error) {
         console.error("Error in sendMessage:", error.message);
@@ -44,12 +44,12 @@ class WhatsAppController {
 
   
     // Send payment update message
-    async sendPaymentUpdateMessage(req, res) {
+    async sendMessageTemplateText(req, res) {
       const { to } = req.body;  // Accessing the recipient's number from request body
       console.log("Send Payment Update API called...");
       const variables = ["649.00", "AFCAT 01/2025"];  // Example payment update details
       try {
-        const response = await this.messageService.sendTemplateMessage(to, "payment_confirmation_2", variables);
+        const response = await this.messageService.sendMessageTemplateText(to, "payment_confirmation_2", variables);
         return res.status(200).json({ message: response });
       } catch (error) {
         return res.status(500).json({ error: 'Error sending payment update message', details: error.message });
@@ -69,11 +69,14 @@ class WhatsAppController {
     }
 
     // Send admit card template
-    async sendAdmitCardTemplateMessage(req, res) {
+    async sendMessageTemplateMedia(req, res) {
       const { to } = req.body;  // Accessing the recipient's number from request body
       console.log("Send Admit Card Message API called...");
       try {
-        const response = await this.messageService.sendAdmitCardTemplateMessage(to, "admit_card");
+        const admitCardLink = "https://node-whatsapp-client.onrender.com/candidate/api/download/dummy.pdf?token=secure-token-123";
+        const fileName = "dummy.pdf";
+        const variables = [];  
+        const response = await this.messageService.sendMessageTemplateMedia(to, "admit_card", variables, admitCardLink, fileName);
         return res.status(200).json({ message: response });
       } catch (error) {
         return res.status(500).json({ error: 'Error sending Admit Card message', details: error.message });

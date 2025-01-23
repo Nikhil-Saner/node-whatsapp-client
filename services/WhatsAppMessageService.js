@@ -12,7 +12,7 @@ class WhatsAppMessageService {
   }
 
   // Send a simple text message
-  sendMessage(recipient, message) {
+  sendTextMessage(recipient, message) {
 
     const headers = {
       'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ class WhatsAppMessageService {
   }
 
   // Send a template message with dynamic variables
-  sendTemplateMessage(recipient, templateName, variables) {
+  sendMessageTemplateText(recipient, templateName, variables) {
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.apiToken}`,
@@ -71,45 +71,44 @@ class WhatsAppMessageService {
   }
 
   // Send a simple template message without variables
-  sendSimpleTemplateMessage(recipient, templateName) {
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.apiToken}`,
-    };
+  // sendSimpleTemplateMessage(recipient, templateName) {
+  //   const headers = {
+  //     'Content-Type': 'application/json',
+  //     'Authorization': `Bearer ${this.apiToken}`,
+  //   };
 
-    const body = {
-      messaging_product: 'whatsapp',
-      to: recipient,
-      type: 'template',
-      template: {
-        name: templateName,
-        language: { code: 'en_US' }
-      }
-    };
+  //   const body = {
+  //     messaging_product: 'whatsapp',
+  //     to: recipient,
+  //     type: 'template',
+  //     template: {
+  //       name: templateName,
+  //       language: { code: 'en_US' }
+  //     }
+  //   };
 
-    return axios.post(this.apiUrl, body, { headers })
-      .then(response => response.data)
-      .catch(error => {
-        console.error("Error details:", JSON.stringify(error.response?.data || error.message, null, 2));
-        throw new Error(`Error sending simple template message: ${JSON.stringify(error.response?.data || error.message, null, 2)}`);
-      });
-  }
+  //   return axios.post(this.apiUrl, body, { headers })
+  //     .then(response => response.data)
+  //     .catch(error => {
+  //       console.error("Error details:", JSON.stringify(error.response?.data || error.message, null, 2));
+  //       throw new Error(`Error sending simple template message: ${JSON.stringify(error.response?.data || error.message, null, 2)}`);
+  //     });
+  // }
 
 
     // Send a admit card template message
-    sendAdmitCardTemplateMessage(recipient, templateName) {
+    sendMessageTemplateMedia(recipient, templateName, variables, mediaLink, fileName) {
       const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${this.apiToken}`,
       };
   
-      const admitCardLink = "https://node-whatsapp-client.onrender.com/candidate/api/download/dummy.pdf?token=secure-token-123";
-      const fileName = "dummy.pdf";
+
       // Build the template parameters
-      // const parameters = variables.map(variable => ({
-      //   type: 'text',
-      //   text: variable
-      // }));
+      const parameters = variables.map(variable => ({
+        type: 'text',
+        text: variable
+      }));
   
       const body = {
         messaging_product: 'whatsapp',
@@ -124,12 +123,17 @@ class WhatsAppMessageService {
               {
                 type: 'document',
                 document: {
-                  link: admitCardLink,
+                  link: mediaLink,
                   filename: fileName
                 }
               }
             ]
-          }]
+          },
+          {
+            type: 'body',
+            parameters: parameters
+          }
+        ]
         }
       };
   

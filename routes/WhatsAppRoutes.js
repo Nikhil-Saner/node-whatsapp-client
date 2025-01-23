@@ -1,16 +1,17 @@
 // routes/WhatsAppRoutes.js
 
 const express = require('express');
+const authenticate = require('../middlewares/AuthMiddleware'); // Import the middleware
 
 module.exports = function(whatsappController) {
   const router = express.Router();
 
   // Define routes and associate with controller methods
   router.get('/test', (req, res) => whatsappController.test(req, res));
-  router.post('/send', (req, res) => whatsappController.sendMessage(req, res));
-  router.post('/sendPaymentUpdate', (req, res) => whatsappController.sendPaymentUpdateMessage(req, res));
-  router.post('/sendHelpdeskMessage', (req, res) => whatsappController.sendHelpdeskMessage(req, res));
-  router.post('/sendAdmitCardMessage', (req, res) => whatsappController.sendAdmitCardTemplateMessage(req, res));
+  router.post('/sendTextMessage', authenticate, (req, res) => whatsappController.sendTextMessage(req, res));
+  router.post('/sendMessageTemplateText', authenticate, (req, res) => whatsappController.sendMessageTemplateText(req, res));
+  router.post('/sendHelpdeskMessage', authenticate, (req, res) => whatsappController.sendHelpdeskMessage(req, res));
+  router.post('/sendMessageTemplateMedia', authenticate, (req, res) => whatsappController.sendMessageTemplateMedia(req, res));
 
   return router;
 };
