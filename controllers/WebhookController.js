@@ -72,7 +72,9 @@ class WebhookController {
       console.log(`Processing incoming message from ${from}`);
       
       // Send a static response
-      await this.messageService.sendSimpleTemplateMessage(from, 'auto_reply');
+      const variables = [];  
+      // await this.messageService.sendSimpleTemplateMessage(from, 'auto_reply');
+      await this.messageService.sendMessageTemplateText(from, 'auto_reply', variables);
   
       // Mark the message as read
       await this.messageService.markMessageAsRead(messageId)
