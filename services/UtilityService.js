@@ -21,7 +21,7 @@ class UtilityService {
       .createHmac('sha256', this.secretKeyForDownload)
       .update(`${fileName}${expires}`)
       .digest('hex');
-    return `${this.baseUrl}/${fileName}?token=${signature}&expires=${expires}`;
+    return `${this.baseUrl}/media/${fileName}?token=${signature}&expires=${expires}`;
   }
 
   /**
