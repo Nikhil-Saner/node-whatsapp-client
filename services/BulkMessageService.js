@@ -81,6 +81,8 @@ class BulkMessageService {
    * @param {string} templateName - The template name to use for sending messages.
    */
     static async sendBulkMediaTemplateMessages(customers, templateName) {
+
+      console.log("sendBulkMediaTemplateMessages called..............................");
       const apiUrl = process.env.WHATSAPP_API_URL;
       const apiToken = process.env.WHATSAPP_API_TOKEN;
   
@@ -89,7 +91,8 @@ class BulkMessageService {
         const parameters = this.createDynamicParameters(customer);
 
         const utilityService = new UtilityService();
-        const headerMediaFileLink = utilityService.generateSignedUrl(customer.headerMediaFilename)
+        const headerMediaFileLink = utilityService.generateSignedUrl(customer.headerMediaFilename);
+        console.log("headerMediaLink = "+headerMediaFileLink);
   
         console.log(JSON.stringify(parameters));
         // Construct the API request payload

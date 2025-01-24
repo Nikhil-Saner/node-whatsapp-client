@@ -44,7 +44,7 @@ class BulkMessageController {
       }
 
       // Call the service to send messages
-      await BulkMessageService.sendBulkMessages(customers, templateName);
+      await BulkMessageService.sendBulkMediaTemplateMessages(customers, templateName);
 
       return res.status(200).json({ message: "Media Template Messages sent successfully!" });
     } catch (error) {
