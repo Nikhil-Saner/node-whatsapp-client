@@ -18,7 +18,7 @@ class UtilityService {
   generateSignedUrl(fileName) {
     const expires = Math.floor(Date.now() / 1000) + this.expiresIn; // Expiration timestamp
     const signature = crypto
-      .createHmac('sha256', this.secretKey)
+      .createHmac('sha256', this.secretKeyForDownload)
       .update(`${fileName}${expires}`)
       .digest('hex');
     return `${this.baseUrl}/${fileName}?token=${signature}&expires=${expires}`;
@@ -37,7 +37,7 @@ class UtilityService {
     }
 
     const validToken = crypto
-      .createHmac('sha256', this.secretKey)
+      .createHmac('sha256', this.secretKeyForDownload)
       .update(`${fileName}${expires}`)
       .digest('hex');
 

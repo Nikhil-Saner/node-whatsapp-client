@@ -1,5 +1,5 @@
 const path = require('path');
-class DownloadController {
+class MediaController {
 
     // Constructor that accepts the service instance
     constructor(utilityService) {
@@ -27,7 +27,7 @@ class DownloadController {
 
 
   // Handle file download with token validation
-  handleFileDownload(req, res) {
+  handleMedia(req, res) {
     // const fileName = req.params.fileName; // File name from URL
     // const filePath = path.join(__dirname, '../public/files', fileName); // File location
     // const token = req.query.token; // Security token passed as query param
@@ -63,4 +63,4 @@ class DownloadController {
   }
 }
 
-module.exports = DownloadController;
+module.exports = MediaController;

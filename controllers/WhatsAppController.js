@@ -1,10 +1,13 @@
 // controllers/WhatsAppController.js
 
+const UtilityService = require("../services/UtilityService");
+
 class WhatsAppController {
 
     // Constructor that accepts the service instance
-    constructor(messageService) {
+    constructor(messageService, utilityService) {
       this.messageService = messageService;
+      this.utilityService = utilityService;
     }
   
     // Test endpoint
@@ -32,6 +35,7 @@ class WhatsAppController {
     async sendTextMessage(req, res) {
       const { to, message } = req.body; // Accessing the data from request body
       console.log("Send Message API called...");
+  
 
       try {
         const response = await this.messageService.sendTextMessage(to, message); // Await the Promise to resolve
@@ -73,8 +77,11 @@ class WhatsAppController {
       const { to } = req.body;  // Accessing the recipient's number from request body
       console.log("Send Admit Card Message API called...");
       try {
-        const admitCardLink = "https://node-whatsapp-client.onrender.com/candidate/api/download/dummy.pdf?token=secure-token-123";
+        // const admitCardLink = "https://node-whatsapp-client.onrender.com/candidate/api/download/dummy.pdf?token=secure-token-123";
         const fileName = "dummy.pdf";
+        const admitCardLink = this.utilityService.generateSignedUrl(fileName);
+        console.log("admitCardLink="+admitCardLink);
+
         const variables = [];  
         const response = await this.messageService.sendMessageTemplateMedia(to, "admit_card", variables, admitCardLink, fileName);
         return res.status(200).json({ message: response });

@@ -96,7 +96,9 @@ async login(req, res) {
         { expiresIn: '1h' }
       );
   
+      res.setHeader('Authorization', `Bearer ${token}`);
       res.status(200).json({ token });
+
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Login failed.' });
