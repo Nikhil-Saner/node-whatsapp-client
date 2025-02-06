@@ -13,8 +13,13 @@ module.exports = function(whatsappController) {
   router.post('/sendMessageTemplateText', authenticate, (req, res) => whatsappController.sendMessageTemplateText(req, res));
   router.post('/sendHelpdeskMessage', authenticate, (req, res) => whatsappController.sendHelpdeskMessage(req, res));
   router.post('/sendMessageTemplateMedia', authenticate, (req, res) => whatsappController.sendMessageTemplateMedia(req, res));
-  router.post('/sendBulkMessages', authenticate, (req, res) => BulkMessageController.sendBulkMessages(req,res));
+  router.post('/sendBulkTemplateMessages', authenticate, (req, res) => BulkMessageController.sendBulkTemplateMessages(req,res));
   router.post('/sendBulkMediaTemplateMessages', authenticate, (req, res) => BulkMessageController.sendBulkMediaTemplateMessages(req,res));
+  router.post('/sendBulkTextMessages', authenticate, (req, res) => BulkMessageController.sendBulkTextMessages(req,res));
+  router.post('/sendBulkDynamicTextMessages', authenticate, (req, res) => BulkMessageController.sendBulkDynamicTextMessages(req,res));
+  router.get('/getBulkMessageStatus', authenticate, (req, res) => BulkMessageController.getBulkMessageStatus(req,res));
+  router.get('/getBulkMessageRequestList', authenticate, (req, res) => BulkMessageController.getBulkMessageRequestList(req,res));
+
 
   return router;
 };

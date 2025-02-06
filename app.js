@@ -39,9 +39,19 @@ const authController = new AuthController();
 const templateController = new TemplateController(templateService);
 
 // Middleware for JSON and URL encoded data
-app.use(bodyParser.json());
+
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+
+
+// Increase payload size limit
+app.use(bodyParser.json({ limit: '50mb' })); // Adjust size as needed
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
+// Increase payload size limit
+// app.use(express.json({ limit: '50mb' })); // Adjust size as needed
+// app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Serve static files from the "public" folder
 app.use('/public', express.static(path.join(__dirname, 'public')));
