@@ -193,79 +193,15 @@ class BulkMessageService {
 
 
 
-// with individual status
-static async sendTemplateMessagesBatch(batch, templateName, bulkRequestId) {
-  const apiUrl = process.env.WHATSAPP_API_URL;
-  const apiToken = process.env.WHATSAPP_API_TOKEN;
+// Sending Template messages 
 
-  let successfulMessages = 0;
-  let failedMessages = 0;
-
-  for (const customer of batch) {
-    const parameters = this.createDynamicParameters(customer);
-
-    const body = {
-      messaging_product: 'whatsapp',
-      to: customer.phone,
-      type: 'template',
-      template: {
-        name: templateName,
-        language: { code: 'en_US' },
-        components: [{ type: 'body', parameters }],
-      },
-    };
-
-    try {
-      const response = await axios.post(apiUrl, body, {
-        headers: {
-          Authorization: `Bearer ${apiToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      // Create a record for successful message
-      await BulkMessageStatus.create({
-        bulkMessageRequestId,  // Link to the bulk request
-        customerPhone: customer.phone,
-        status: 'SUCCESS',
-        errorMessage: null,
-      });
-
-      successfulMessages++;
-    } catch (error) {
-      // Create a record for failed message
-      await BulkMessageStatus.create({
-        bulkMessageRequestId,  // Link to the bulk request
-        customerPhone: customer.phone,
-        status: 'FAILED',
-        errorMessage: error.message,  // Capture the error message
-      });
-
-      console.error(`Failed to send message to ${customer.phone}:`, error.message);
-      failedMessages++;
-    }
-  }
-
-  // Update the bulk request with the message statistics
-  const bulkRequest = await BulkMessageRequest.findByPk(bulkRequestId);
-  if (bulkRequest) {
-    bulkRequest.successfulMessages = successfulMessages;
-    bulkRequest.failedMessages = failedMessages;
-    await bulkRequest.save();
-  }
-
-  return { successfulMessages, failedMessages };
-}
-
-
-
-// WITH INDIVIDUAL STATUS AND DUMMY LOGIC
 // static async sendTemplateMessagesBatch(batch, templateName, bulkRequestId) {
+//   const apiUrl = process.env.WHATSAPP_API_URL;
+//   const apiToken = process.env.WHATSAPP_API_TOKEN;
+
 //   let successfulMessages = 0;
 //   let failedMessages = 0;
-//   console.log("bulkRequestId ============================================================ "+bulkRequestId);
 
-//   // Simulate processing each customer
 //   for (const customer of batch) {
 //     const parameters = this.createDynamicParameters(customer);
 
@@ -281,48 +217,32 @@ static async sendTemplateMessagesBatch(batch, templateName, bulkRequestId) {
 //     };
 
 //     try {
-//       // Simulate random success or failure with a delay
-//       const isSuccessful = Math.random() > 0.2; // 80% chance of success
-//       await new Promise(resolve => setTimeout(resolve, 100)); // Simulate a delay
-
-//       if (isSuccessful) {
-//         // Simulate a successful message
-//         console.log(`Successfully sent message to ${customer.phone}`);
-
-//         // Create a record for successful message
-//         await BulkMessageStatus.create({
-//           bulkMessageRequestId: bulkRequestId, // Link to the bulk request
-//           customerPhone: customer.phone,
-//           status: 'SUCCESS',
-//           errorMessage: null,
-//         });
-
-//         successfulMessages++;
-//       } else {
-//         // Simulate a failed message
-//         console.log(`Simulated failure for ${customer.phone}`);
-
-//         // Create a record for failed message
-//         await BulkMessageStatus.create({
-//           bulkMessageRequestId: bulkRequestId, // Link to the bulk request
-//           customerPhone: customer.phone,
-//           status: 'FAILED',
-//           errorMessage: 'Simulated failure', // Simulated error message
-//         });
-
-//         failedMessages++;
-//       }
-//     } catch (error) {
-//       console.error(`Error while sending message to ${customer.phone}:`, error.message);
-
-//       // Create a record for failed message
-//       await BulkMessageStatus.create({
-//         bulkMessageRequestId: bulkRequestId, // Link to the bulk request
-//         customerPhone: customer.phone,
-//         status: 'FAILED',
-//         errorMessage: error.message, // Capture the error message
+//       const response = await axios.post(apiUrl, body, {
+//         headers: {
+//           Authorization: `Bearer ${apiToken}`,
+//           'Content-Type': 'application/json',
+//         },
 //       });
 
+//       // Create a record for successful message
+//       await BulkMessageStatus.create({
+//         bulkMessageRequestId,  // Link to the bulk request
+//         customerPhone: customer.phone,
+//         status: 'SUCCESS',
+//         errorMessage: null,
+//       });
+
+//       successfulMessages++;
+//     } catch (error) {
+//       // Create a record for failed message
+//       await BulkMessageStatus.create({
+//         bulkMessageRequestId,  // Link to the bulk request
+//         customerPhone: customer.phone,
+//         status: 'FAILED',
+//         errorMessage: error.message,  // Capture the error message
+//       });
+
+//       console.error(`Failed to send message to ${customer.phone}:`, error.message);
 //       failedMessages++;
 //     }
 //   }
@@ -340,10 +260,85 @@ static async sendTemplateMessagesBatch(batch, templateName, bulkRequestId) {
 
 
 
+//DUMMY LOGIC-Sending template messages - WITH INDIVIDUAL STATUS AND DUMMY LOGIC
 
+static async sendTemplateMessagesBatch(batch, templateName, bulkRequestId) {
+  let successfulMessages = 0;
+  let failedMessages = 0;
+  console.log("bulkRequestId ============================================================ "+bulkRequestId);
 
+  // Simulate processing each customer
+  for (const customer of batch) {
+    const parameters = this.createDynamicParameters(customer);
 
+    const body = {
+      messaging_product: 'whatsapp',
+      to: customer.phone,
+      type: 'template',
+      template: {
+        name: templateName,
+        language: { code: 'en_US' },
+        components: [{ type: 'body', parameters }],
+      },
+    };
 
+    try {
+      // Simulate random success or failure with a delay
+      const isSuccessful = Math.random() > 0.2; // 80% chance of success
+      await new Promise(resolve => setTimeout(resolve, 100)); // Simulate a delay
+
+      if (isSuccessful) {
+        // Simulate a successful message
+        console.log(`Successfully sent message to ${customer.phone}`);
+
+        // Create a record for successful message
+        await BulkMessageStatus.create({
+          bulkMessageRequestId: bulkRequestId, // Link to the bulk request
+          customerPhone: customer.phone,
+          status: 'SUCCESS',
+          errorMessage: null,
+        });
+
+        successfulMessages++;
+      } else {
+        // Simulate a failed message
+        console.log(`Simulated failure for ${customer.phone}`);
+
+        // Create a record for failed message
+        await BulkMessageStatus.create({
+          bulkMessageRequestId: bulkRequestId, // Link to the bulk request
+          customerPhone: customer.phone,
+          status: 'FAILED',
+          errorMessage: 'Simulated failure', // Simulated error message
+        });
+
+        failedMessages++;
+      }
+    } catch (error) {
+      console.error(`Error while sending message to ${customer.phone}:`, error.message);
+
+      // Create a record for failed message
+      await BulkMessageStatus.create({
+        bulkMessageRequestId: bulkRequestId, // Link to the bulk request
+        customerPhone: customer.phone,
+        status: 'FAILED',
+        errorMessage: error.message, // Capture the error message
+      });
+
+      failedMessages++;
+    }
+  }
+
+  // Update the bulk request with the message statistics
+  const bulkRequest = await BulkMessageRequest.findByPk(bulkRequestId);
+  if (bulkRequest) {
+    bulkRequest.successfulMessages = successfulMessages;
+    bulkRequest.failedMessages = failedMessages;
+    await bulkRequest.save();
+  }
+
+  return { successfulMessages, failedMessages };
+}
 
 
 
@@ -392,6 +387,10 @@ static async processBulkMediaTemplateMessages(customers, templateName, requestId
       return { successfulMessages, failedMessages }; // Return partial results if any
   }
 }
+
+
+
+// For Sending Media Template Messages
 
 // static async sendMediaTemplateBatch(batch, templateName, bulkRequestId) {
 //   const apiUrl = process.env.WHATSAPP_API_URL;
@@ -476,7 +475,7 @@ static async processBulkMediaTemplateMessages(customers, templateName, requestId
 
 
 
-//DUMMY
+//DUMMY-For Sending Media Template Messages
 
 static async sendMediaTemplateBatch(batch, templateName, bulkRequestId) {
   let successfulMessages = 0;
